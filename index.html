@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which Norse God Are You? | Personality Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e8e8e8;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #b8b8b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .question {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .question h3 {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .option:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        .result h2 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .result h3 {
+            font-size: 1.8rem;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .result p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #b8b8b8;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .question h3 {
+                font-size: 1.3rem;
+            }
+            
+            .option {
+                font-size: 1rem;
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ Which Norse God Are You? ⚔️</h1>
+            <p>Discover your divine destiny through this ancient personality quiz. Answer honestly to reveal which Norse deity matches your spirit!</p>
+        </div>
+
+        <div class="quiz-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="question-counter">
+                <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="question active" data-question="1">
+                <h3>What motivates you most in life?</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Seeking justice and protecting the innocent</div>
+                    <div class="option" data-god="odin">Gaining wisdom and knowledge</div>
+                    <div class="option" data-god="loki">Having fun and causing mischief</div>
+                    <div class="option" data-god="freyja">Finding love and beauty in all things</div>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question" data-question="2">
+                <h3>In a conflict, you prefer to:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Charge in headfirst with brute force</div>
+                    <div class="option" data-god="odin">Strategize and outthink your opponent</div>
+                    <div class="option" data-god="loki">Use trickery and deception</div>
+                    <div class="option" data-god="freyja">Use charm and persuasion</div>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question" data-question="3">
+                <h3>Your ideal weapon would be:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">A mighty hammer that never misses</div>
+                    <div class="option" data-god="odin">A magical spear that grants wisdom</div>
+                    <div class="option" data-god="loki">A shape-shifting staff</div>
+                    <div class="option" data-god="freyja">A necklace that enhances beauty and magic</div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question" data-question="4">
+                <h3>What's your favorite type of weather?</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Thunderstorms and lightning</div>
+                    <div class="option" data-god="odin">Mysterious fog and mist</div>
+                    <div class="option" data-god="loki">Unpredictable and ever-changing</div>
+                    <div class="option" data-god="freyja">Golden sunshine and gentle breezes</div>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question" data-question="5">
+                <h3>Your greatest fear is:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Being unable to protect those you love</div>
+                    <div class="option" data-god="odin">Losing your knowledge or memory</div>
+                    <div class="option" data-god="loki">Being trapped or bound</div>
+                    <div class="option" data-god="freyja">Losing your beauty or youth</div>
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question" data-question="6">
+                <h3>In your free time, you enjoy:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Physical challenges and competitions</div>
+                    <div class="option" data-god="odin">Reading, studying, and contemplation</div>
+                    <div class="option" data-god="loki">Playing pranks and telling stories</div>
+                    <div class="option" data-god="freyja">Creating art, music, or poetry</div>
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="question" data-question="7">
+                <h3>Your ideal companion would be:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">A loyal and brave warrior</div>
+                    <div class="option" data-god="odin">Two wise ravens who bring news</div>
+                    <div class="option" data-god="loki">A clever wolf or serpent</div>
+                    <div class="option" data-god="freyja">A majestic cat or falcon</div>
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="question" data-question="8">
+                <h3>When making decisions, you rely on:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Your gut instinct and moral compass</div>
+                    <div class="option" data-god="odin">Careful analysis and foresight</div>
+                    <div class="option" data-god="loki">Quick wit and adaptability</div>
+                    <div class="option" data-god="freyja">Your emotions and intuition</div>
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="question" data-question="9">
+                <h3>Your dream home would be:</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">A grand hall filled with warriors</div>
+                    <div class="option" data-god="odin">A high tower with a view of all realms</div>
+                    <div class="option" data-god="loki">A hidden cave that changes location</div>
+                    <div class="option" data-god="freyja">A beautiful palace with gardens</div>
+                </div>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="question" data-question="10">
+                <h3>What legacy do you want to leave behind?</h3>
+                <div class="options">
+                    <div class="option" data-god="thor">Being remembered as a protector and hero</div>
+                    <div class="option" data-god="odin">Having your wisdom guide future generations</div>
+                    <div class="option" data-god="loki">Being known for your cleverness and wit</div>
+                    <div class="option" data-god="freyja">Inspiring love, beauty, and creativity</div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>Previous</button>
+                <button class="btn" id="nextBtn" onclick="changeQuestion(1)" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="result" id="result">
+            <h2>Your Divine Match:</h2>
+            <h3 id="godName"></h3>
+            <p id="godDescription"></p>
+            <button class="restart-btn" onclick="restartQuiz()">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        const questions = document.querySelectorAll('.question');
+        const totalQuestions = questions.length;
+        let answers = {};
+
+        // God descriptions
+        const godDescriptions = {
+            thor: {
+                name: "Thor - God of Thunder",
+                description: "You are Thor, the mighty God of Thunder! Like the legendary hammer-wielding deity, you are brave, strong, and fiercely protective of those you love. You believe in justice and aren't afraid to stand up for what's right, even when the odds are against you. Your strength comes not just from your physical power, but from your unwavering moral compass and your willingness to fight for the innocent. You may be quick to anger, but your heart is pure and your intentions are noble. You are the kind of person others look to in times of trouble, knowing you will always do what's right."
+            },
+            odin: {
+                name: "Odin - The All-Father",
+                description: "You are Odin, the wise All-Father! Like the one-eyed god who sacrificed his eye for wisdom, you are deeply intellectual and always seeking knowledge. You understand that true power comes from understanding, not force. You are patient, strategic, and willing to make sacrifices for greater knowledge. Others may see you as mysterious or aloof, but you simply operate on a different level of thinking. You value wisdom above all else and are always looking for ways to learn and grow. Your depth of understanding makes you a natural leader and advisor."
+            },
+            loki: {
+                name: "Loki - The Trickster God",
+                description: "You are Loki, the clever Trickster God! Like the shape-shifting deity known for his wit and cunning, you are intelligent, adaptable, and always thinking several steps ahead. You have a mischievous sense of humor and aren't afraid to challenge the status quo. While others might see you as unpredictable, you simply see possibilities that others miss. You're not bound by conventional thinking and aren't afraid to break rules when it serves a greater purpose. Your quick wit and ability to adapt to any situation make you both entertaining and surprisingly resourceful."
+            },
+            freyja: {
+                name: "Freyja - Goddess of Love and War",
+                description: "You are Freyja, the beautiful Goddess of Love and War! Like the powerful deity who presides over both love and battle, you embody the perfect balance of strength and beauty. You understand that true power comes from the heart, and you're not afraid to fight for what you believe in. You appreciate beauty in all its forms and have a natural ability to inspire and enchant others. Your emotional intelligence is your greatest strength, allowing you to connect with others on a deep level. You are passionate, determined, and have an inner strength that others often underestimate."
+            }
+        };
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+        }
+
+        function showQuestion(index) {
+            questions.forEach((question, i) => {
+                question.classList.toggle('active', i === index);
+            });
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.textContent = 'See Results';
+                nextBtn.disabled = !answers[currentQuestionIndex];
+            } else {
+                nextBtn.textContent = 'Next';
+                nextBtn.disabled = !answers[currentQuestionIndex];
+            }
+        }
+
+        function changeQuestion(direction) {
+            if (direction === 1 && currentQuestionIndex === totalQuestions - 1) {
+                showResults();
+                return;
+            }
+            
+            const newIndex = currentQuestionIndex + direction;
+            if (newIndex >= 0 && newIndex < totalQuestions) {
+                currentQuestionIndex = newIndex;
+                showQuestion(currentQuestionIndex);
+            }
+        }
+
+        function selectOption(option) {
+            const question = option.closest('.question');
+            const questionIndex = parseInt(question.dataset.question) - 1;
+            const god = option.dataset.god;
+            
+            // Remove previous selection in this question
+            question.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            option.classList.add('selected');
+            
+            // Store answer
+            answers[questionIndex] = god;
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+        }
+
+        function showResults() {
+            // Calculate results
+            const godScores = { thor: 0, odin: 0, loki: 0, freyja: 0 };
+            
+            Object.values(answers).forEach(god => {
+                godScores[god]++;
+            });
+            
+            // Find the god with the highest score
+            const resultGod = Object.keys(godScores).reduce((a, b) => 
+                godScores[a] > godScores[b] ? a : b
+            );
+            
+            // Hide quiz and show results
+            document.querySelector('.quiz-container').style.display = 'none';
+            document.getElementById('result').classList.add('active');
+            
+            // Display results
+            document.getElementById('godName').textContent = godDescriptions[resultGod].name;
+            document.getElementById('godDescription').textContent = godDescriptions[resultGod].description;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            answers = {};
+            
+            // Reset all selections
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Show quiz and hide results
+            document.querySelector('.quiz-container').style.display = 'block';
+            document.getElementById('result').classList.remove('active');
+            
+            // Show first question
+            showQuestion(0);
+        }
+
+        // Add event listeners to options
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectOption(this);
+                });
+            });
+            
+            updateProgress();
+            updateNavigationButtons();
+        });
+    </script>
+</body>
+</html>
